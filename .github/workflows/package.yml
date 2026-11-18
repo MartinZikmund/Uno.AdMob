@@ -31,7 +31,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build -c Release src/Uno.AdMob.Tests/Uno.AdMob.Tests.csproj -p:PublicRelease=${{ github.event_name == 'push' }}
     - name: Publish artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: nuget-packages
         path: |
