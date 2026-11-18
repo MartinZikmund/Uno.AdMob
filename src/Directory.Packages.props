@@ -1,0 +1,17 @@
+<Project ToolsVersion="15.0">
+  <ItemGroup>
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
+    <PackageVersion Include="Xamarin.Google.Android.Libraries.Ads.Mobile.Sdk" Version="1.5.0" />
+    <PackageVersion Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.1" />
+    <PackageVersion Include="Jc.GMA.iOS" Version="12.10.0" />
+    <PackageVersion Include="Jc.UMP.iOS" Version="2.7.5" />
+  </ItemGroup>
+
+  <!-- Test-only -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+    <PackageVersion Include="MSTest" Version="4.3.2" />
+  </ItemGroup>
+</Project>

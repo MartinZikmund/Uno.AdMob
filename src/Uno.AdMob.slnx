@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".vsconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="version.json" />
+  </Folder>
+  <Project Path="Uno.AdMob/Uno.AdMob.csproj" />
+  <Folder Name="/Tests/">
+    <Project Path="Uno.AdMob.Tests/Uno.AdMob.Tests.csproj" />
+  </Folder>
+</Solution>

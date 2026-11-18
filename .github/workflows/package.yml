@@ -1,0 +1,68 @@
+name: 'Build and deploy .NET packages'
+
+on:
+  push:
+    branches: [ "main", "release/*" ]
+  pull_request:
+    branches: [ "main", "release/*" ]
+
+jobs:
+  build:
+    name: '.NET Build'
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Nerdbank.GitVersioning needs full history to compute the version height.
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore workloads
+      run: dotnet workload restore src/Uno.AdMob.slnx
+    - name: Restore dependencies
+      run: dotnet restore src/Uno.AdMob.slnx
+    # Pushes are public releases (see publicReleaseRefSpec in version.json): main builds a
+    # prerelease (1.0.0-beta.5), release/x.y a stable version (1.0.1). PR builds keep a .g<commit> suffix.
+    - name: Build
+      run: dotnet build --no-restore -c Release src/Uno.AdMob.slnx -p:PublicRelease=${{ github.event_name == 'push' }}
+    - name: Test
+      run: dotnet test --no-build -c Release src/Uno.AdMob.Tests/Uno.AdMob.Tests.csproj -p:PublicRelease=${{ github.event_name == 'push' }}
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: |
+          src/**/*.nupkg
+          src/**/*.snupkg
+
+  publish:
+    name: 'Publish to NuGet'
+    runs-on: windows-latest
+    # Pushes to main publish prereleases, pushes to release/x.y publish stable versions.
+    # Cut a release branch with `nbgv prepare-release`. Pull requests never publish.
+    if: github.event_name == 'push'
+    needs: build
+    permissions:
+      # Trusted Publishing: NuGet/login exchanges the workflow's OIDC token for a short-lived API key.
+      id-token: write
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./packages
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: NuGet login
+      id: nuget-login
+      uses: NuGet/login@v1
+      with:
+        user: mzikmunddev
+    - name: Publish to NuGet
+      run: dotnet nuget push "**/*.nupkg" -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
