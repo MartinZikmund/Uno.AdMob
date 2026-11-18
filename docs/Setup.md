@@ -62,7 +62,7 @@ The list includes the Google Mobile Ads SDK itself (`com.google.android.librarie
 
 - **Android / iOS**: fully supported.
 - **Windows / desktop / WebAssembly**: the package compiles and runs, so shared code needs no `#if`, but no ads are displayed. `AdMobPlatform.IsSupported` is `false`, `BannerAd` stays empty, and loading any other format raises `OnAdFailedToLoad` ("Ads are only supported on Android and iOS.").
-- **Native ads** and **WebAssembly / AdSense** are not supported yet, see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues) and [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues).
+- **Native ads** and **WebAssembly / AdSense** are not supported yet, see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues/1) and [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues/2).
 
 ## Android setup
 

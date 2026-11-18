@@ -21,6 +21,6 @@ The ad APIs are the same on purpose. What changes is how you plug the library in
 
 Not available yet:
 
-- Native ads (`NativeAdView`, `MediaView`, `INativeAdService`), see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues).
-- WebAssembly with AdSense, see [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues).
+- Native ads (`NativeAdView`, `MediaView`, `INativeAdService`), see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues/1).
+- WebAssembly with AdSense, see [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues/2).
 - MacCatalyst. Windows and desktop compile, but show no ads.

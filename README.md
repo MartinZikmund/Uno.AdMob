@@ -18,7 +18,7 @@ dotnet add package MZikmund.Uno.AdMob
 
 The package targets `net10.0-android`, `net10.0-ios`, `net10.0-windows10.0.19041` and `net10.0`, and is built on Uno Platform 7.0 (`Uno.Sdk`).
 
-**Not yet supported:** [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues) and [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues).
+**Not yet supported:** [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues/1) and [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues/2).
 
 ## Setup
 

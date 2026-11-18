@@ -14,7 +14,7 @@ These docs describe how to integrate and use `MZikmund.Uno.AdMob` in an Uno Plat
 1. [Rewarded interstitial ads](Rewarded-interstitial-ads.md)
 1. [App open ads](App-open-ads.md)
 
-Native ads are not supported yet, see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues).
+Native ads are not supported yet, see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues/1).
 
 ## Help
 
