@@ -17,7 +17,7 @@ jobs:
         # Nerdbank.GitVersioning needs full history to compute the version height.
         fetch-depth: 0
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
     - name: Restore workloads
@@ -56,7 +56,7 @@ jobs:
         name: nuget-packages
         path: ./packages
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
     - name: NuGet login
