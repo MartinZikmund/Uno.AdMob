@@ -118,3 +118,15 @@ Debug builds don't embed the assemblies in the APK. Build with `-p:EmbedAssembli
 ### Related issues
 
 - [`#40`](https://github.com/marius-bughiu/Plugin.AdMob/issues/40) (older Android compatibility / `getDisplay()` errors)
+
+## Testing the packed package
+
+R8 and the NuGet package layout only get exercised when the sample consumes the real nupkg instead of the project. The sample has a switch for that:
+
+```bash
+dotnet pack src/Uno.AdMob/Uno.AdMob.csproj -c Release -o ./feed
+
+dotnet build samples/Uno.AdMob.Sample/Uno.AdMob.Sample/Uno.AdMob.Sample.csproj   -f net10.0-android -c Release   -p:UseAdMobPackage=true -p:AdMobPackageVersion=<version of the nupkg in ./feed>   -p:RestoreAdditionalProjectSources=$PWD/feed   -p:AndroidLinkTool=r8 -p:AndroidEnableProguard=true
+```
+
+`AndroidLinkTool=r8` turns R8 on (Release doesn't run it by default). The build should succeed with no "defined multiple times" errors. Afterwards, delete the `mzikmund.uno.admob` folder from your NuGet global packages folder so the local build doesn't shadow the real feed.

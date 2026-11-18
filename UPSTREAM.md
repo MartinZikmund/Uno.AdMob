@@ -16,6 +16,19 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
    - `skipped`: ignore, unless we decide to port it.
 4. Add rows for new upstream files, then update the synced tag and commit above.
 
+Line endings: the files here may have different line endings than upstream's. Compare with `git diff --ignore-cr-at-eol` (or `diff --strip-trailing-cr`) so only real changes show up. `.gitattributes` uses `* text=auto`; existing files were not renormalized.
+
+## Uno-only files
+
+These have no upstream counterpart, so a sync never touches them:
+
+- `AdMobPlatform.cs`: the `Initialize` entry point (replaces MAUI's `IPlatformApplication.Current.Services`).
+- `AdMobPlatform.ConsentStartup.cs`: the automatic consent flow on startup. It replaces upstream's lifecycle hooks in `Config.cs`, so when upstream changes the consent logic there, re-apply the change here.
+- `Handlers/ViewHandler.cs`: tiny stand-in for MAUI's `ViewHandler` base class that the ported banner handlers derive from.
+- `Platforms/Android/ActivityResolver.cs`: tracks the current activity (replaces `Platform.CurrentActivity`).
+- `Platforms/Android/AdMobPlatform.Android.cs`: Android part of `Initialize` (lifecycle hooks, consent startup).
+- `Platforms/iOS/AdMobPlatform.iOS.cs`: iOS part of `Initialize` (app-active hook, consent startup).
+
 ## File map
 
 | Upstream path | Uno path | Status | Note |
