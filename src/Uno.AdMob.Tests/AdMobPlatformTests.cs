@@ -35,6 +35,51 @@ public class AdMobPlatformTests
     }
 
     [TestMethod]
+    public void Initialize_RaisesInitializedOncePerCall()
+    {
+        ServiceCollection services = new();
+        services.AddAdMob();
+        var provider = services.BuildServiceProvider();
+        int raised = 0;
+        EventHandler handler = (_, _) => raised++;
+        AdMobPlatform.Initialized += handler;
+
+        try
+        {
+            AdMobPlatform.Initialize(provider);
+            Assert.AreEqual(1, raised);
+
+            AdMobPlatform.Initialize(provider);
+            Assert.AreEqual(2, raised);
+        }
+        finally
+        {
+            AdMobPlatform.Initialized -= handler;
+        }
+    }
+
+    [TestMethod]
+    public void Initialize_WithoutAddAdMob_ThrowsAndDoesNotStoreServices()
+    {
+        var provider = new ServiceCollection().BuildServiceProvider();
+        int raised = 0;
+        EventHandler handler = (_, _) => raised++;
+        AdMobPlatform.Initialized += handler;
+
+        try
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => AdMobPlatform.Initialize(provider));
+            StringAssert.Contains(ex.Message, "AddAdMob");
+            Assert.IsNull(AdMobPlatform.Services);
+            Assert.AreEqual(0, raised);
+        }
+        finally
+        {
+            AdMobPlatform.Initialized -= handler;
+        }
+    }
+
+    [TestMethod]
     public void BannerAd_Type_IsContentControl() => Assert.AreEqual(typeof(Microsoft.UI.Xaml.Controls.ContentControl), typeof(BannerAd).BaseType);
 
     [TestMethod]
