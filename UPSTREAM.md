@@ -121,27 +121,27 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
 | `src/Plugin.AdMob/MobileAdsInitialization.cs` | `src/Uno.AdMob/MobileAdsInitialization.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
 | `src/Plugin.AdMob/NativeAd.cs` | - | skipped | Native ads are not ported in v1. |
 | `src/Plugin.AdMob/NativeAdView.cs` | - | skipped | Native ads are not ported in v1. |
-| `src/Plugin.AdMob/Platforms/Android/AdLoadCallback.cs` | `src/Uno.AdMob/Platforms/Android/AdLoadCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/AdMobInitializer.cs` | `src/Uno.AdMob/Platforms/Android/AdMobInitializer.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | `src/Uno.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | pending | Android platform code (Tasks 3 and 4). |
+| `src/Plugin.AdMob/Platforms/Android/AdLoadCallback.cs` | `src/Uno.AdMob/Platforms/Android/AdLoadCallback.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/Android/AdMobInitializer.cs` | `src/Uno.AdMob/Platforms/Android/AdMobInitializer.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | adapted | Native entries get "Reserved – native ads are not supported yet." XML doc. |
+| `src/Plugin.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | `src/Uno.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
 | `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
 | `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | pending | Android platform code (Tasks 3 and 4). |
 | `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/Consent/AdConsentService.cs` | `src/Uno.AdMob/Platforms/Android/Consent/AdConsentService.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/Extensions.cs` | `src/Uno.AdMob/Platforms/Android/Extensions.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/FullScreenContentCallback.cs` | `src/Uno.AdMob/Platforms/Android/FullScreenContentCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/Interstitial/InterstitialAd.cs` | `src/Uno.AdMob/Platforms/Android/Interstitial/InterstitialAd.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/MainThreadDispatcher.cs` | `src/Uno.AdMob/Platforms/Android/MainThreadDispatcher.cs` | pending | Android platform code (Tasks 3 and 4). |
+| `src/Plugin.AdMob/Platforms/Android/Consent/AdConsentService.cs` | `src/Uno.AdMob/Platforms/Android/Consent/AdConsentService.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
+| `src/Plugin.AdMob/Platforms/Android/Extensions.cs` | `src/Uno.AdMob/Platforms/Android/Extensions.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/Android/FullScreenContentCallback.cs` | `src/Uno.AdMob/Platforms/Android/FullScreenContentCallback.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/Android/Interstitial/InterstitialAd.cs` | `src/Uno.AdMob/Platforms/Android/Interstitial/InterstitialAd.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
+| `src/Plugin.AdMob/Platforms/Android/MainThreadDispatcher.cs` | `src/Uno.AdMob/Platforms/Android/MainThreadDispatcher.cs` | adapted | MAUI MainThread replaced by Looper/Handler. |
 | `src/Plugin.AdMob/Platforms/Android/Native/MediaViewHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Android/Native/NativeAd.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Android/Native/NativeAdEventCallback.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Android/Native/NativeAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Android/Native/NativeAdLoaderCallback.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Android/Native/VideoLifecycleCallbacks.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
-| `src/Plugin.AdMob/Platforms/Android/Rewarded/RewardedAd.cs` | `src/Uno.AdMob/Platforms/Android/Rewarded/RewardedAd.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/RewardedInterstitial/RewardedInterstitialAd.cs` | `src/Uno.AdMob/Platforms/Android/RewardedInterstitial/RewardedInterstitialAd.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/UserEarnedRewardListener.cs` | `src/Uno.AdMob/Platforms/Android/UserEarnedRewardListener.cs` | pending | Android platform code (Tasks 3 and 4). |
+| `src/Plugin.AdMob/Platforms/Android/Rewarded/RewardedAd.cs` | `src/Uno.AdMob/Platforms/Android/Rewarded/RewardedAd.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
+| `src/Plugin.AdMob/Platforms/Android/RewardedInterstitial/RewardedInterstitialAd.cs` | `src/Uno.AdMob/Platforms/Android/RewardedInterstitial/RewardedInterstitialAd.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
+| `src/Plugin.AdMob/Platforms/Android/UserEarnedRewardListener.cs` | `src/Uno.AdMob/Platforms/Android/UserEarnedRewardListener.cs` | ported | Namespace rename only. |
 | `src/Plugin.AdMob/Platforms/MacCatalyst/Banner/BannerAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/MacCatalyst/Native/MediaViewHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/MacCatalyst/Native/NativeAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |

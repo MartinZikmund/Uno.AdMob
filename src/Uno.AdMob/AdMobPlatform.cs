@@ -52,6 +52,5 @@ public static partial class AdMobPlatform
         return Services.GetRequiredService<T>();
     }
 
-    // TODO(Task 3): the once-only consent startup shared by Android and iOS lives in AdMobPlatform.ConsentStartup.cs.
     static partial void OnInitialized(IServiceProvider services);
 }

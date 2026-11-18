@@ -1,0 +1,63 @@
+using Android.Runtime;
+using Google.Android.Libraries.Ads.Mobile.Sdk;
+using Google.Android.Libraries.Ads.Mobile.Sdk.Common;
+using Uno.AdMob.Platforms.Android;
+using SdkAppOpenAd = Google.Android.Libraries.Ads.Mobile.Sdk.AppOpen.AppOpenAd;
+using SdkIAppOpenAd = Google.Android.Libraries.Ads.Mobile.Sdk.AppOpen.IAppOpenAd;
+
+namespace Uno.AdMob;
+
+internal partial class AppOpenAd
+{
+    private SdkIAppOpenAd? _ad;
+
+    public void Load() => _consentGate.WhenAllowed(LoadAd);
+
+    private void LoadAd()
+    {
+        MobileAdsInitialization.Start();
+
+        AdMobInitializer.RunWhenInitialized(() =>
+        {
+            var configBuilder = new RequestConfiguration.Builder();
+            configBuilder.ApplyGlobalAdConfiguration();
+            MobileAds.RequestConfiguration = configBuilder.Build();
+
+            var adRequest = new AdRequest.Builder(AdUnitId).Build();
+
+            var callback = new AdLoadCallback();
+            callback.Loaded += (s, ad) => AdLoaded(ad.JavaCast<SdkIAppOpenAd>()!);
+            callback.Failed += (s, e) => OnAdFailedToLoad?.Invoke(this, new AdError(e.Message));
+
+            SdkAppOpenAd.Load(adRequest, callback);
+        }, ex => OnAdFailedToLoad?.Invoke(this, new AdError(ex)));
+    }
+
+    public void Show()
+    {
+        if (_ad is null || !TryBeginShow())
+        {
+            return;
+        }
+
+        var callback = new FullScreenContentCallback();
+        callback.AdShowed += (s, e) => OnAdShowed?.Invoke(this, EventArgs.Empty);
+        callback.AdFailedToShow += (s, e) => OnAdFailedToShow?.Invoke(this, new AdError(e.Message));
+        callback.AdImpression += (s, e) => OnAdImpression?.Invoke(this, EventArgs.Empty);
+        callback.AdClicked += (s, e) => OnAdClicked?.Invoke(this, EventArgs.Empty);
+        callback.AdDismissed += (s, e) => OnAdDismissed?.Invoke(this, EventArgs.Empty);
+
+        _ad.AdEventCallback = callback;
+
+        var activity = ActivityResolver.Current!; // Uno: was ActivityStateManager.Default.GetCurrentActivity()
+        _ad.Show(activity);
+    }
+
+    private void AdLoaded(SdkIAppOpenAd appOpenAd)
+    {
+        _ad = appOpenAd;
+        IsLoaded = true;
+
+        OnAdLoaded?.Invoke(this, EventArgs.Empty);
+    }
+}
