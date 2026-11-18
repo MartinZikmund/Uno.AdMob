@@ -5,6 +5,9 @@ Register the library in your app's services, then give it the built service prov
 In `App.xaml.cs`, where you configure your host (this example uses Uno.Extensions hosting):
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+
 var builder = this.CreateBuilder(args)
     .Configure(host => host
         .ConfigureServices((context, services) =>
@@ -18,11 +21,16 @@ AdMobPlatform.Initialize(Host.Services);
 
 `AddAdMob` takes the same parameters as upstream's `UseAdMob` (default ad unit IDs, consent options, targeting options), see [Configuration](Configuration.md).
 
-`AdMobPlatform.Initialize` connects the library to your running app. Call it once, right after building the host and before you show any ads.
+`AdMobPlatform.Initialize` connects the library to your running app. Call it once, right after building the host, on the UI thread. It throws if `AddAdMob()` was not called on that provider.
+
+`Initialize` doesn't have to run before your first page shows. Uno Extensions can navigate to the first page before your startup code gets the host back (for example when you await the navigation while building it), so a `BannerAd` on that page loads before `Initialize` has run. That's fine: the banner waits and loads its ad as soon as `Initialize` runs. The other ad formats need `Initialize` before you use them.
 
 No Uno.Extensions hosting? A plain service collection works too:
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+
 IServiceProvider provider = new ServiceCollection()
     .AddAdMob()
     .BuildServiceProvider();
@@ -34,7 +42,11 @@ The library starts the Google Mobile Ads SDK for you, on both platforms, as soon
 
 To find out when the SDK has started, for example to check that your mediation adapters initialized, await `IMobileAdsService.Initialization`. It completes once the SDK has started and its adapters have initialized or timed out, with the status of each adapter:
 
-```
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var mobileAdsService = AdMobPlatform.Services!.GetRequiredService<IMobileAdsService>();
 var status = await mobileAdsService.Initialization;
 

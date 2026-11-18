@@ -57,6 +57,10 @@ Consent check can also be managed using `AdConfig.DisableConsentCheck`.
 Uno.AdMob provides a service collection extension which allows you to test your app's behavior as though the device were located in various regions, such as the EEA or UK. Note that debug settings only work on test devices.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Configuration;
+
 services.AddAdMob();
 services.AddConsentDebugSettings(new ConsentDebugSettings
 {
@@ -75,6 +79,10 @@ services.AddConsentDebugSettings(new ConsentDebugSettings
 If you opt-out from automatic consent handling, you can make use of the `IAdConsentService` service to manage the user's consent. The service is registered by the library and can be either injected or retrieved from the service provider as follows:
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var adConsentService = AdMobPlatform.Services!.GetRequiredService<IAdConsentService>();
 ```
 

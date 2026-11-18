@@ -56,6 +56,7 @@ The minimum iOS version must be 15.0. See the [Setup guide](https://github.com/M
 Register the services, then hand the built service provider to `AdMobPlatform`:
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Uno.AdMob;
 using Uno.AdMob.Configuration;
 
@@ -63,9 +64,11 @@ using Uno.AdMob.Configuration;
 services.AddAdMob();
 AdConfig.UseTestAdUnitIds = true; // Google's test ads, safe to tap
 
-// After building the host
+// After building the host, on the UI thread
 AdMobPlatform.Initialize(Host.Services);
 ```
+
+`Initialize` throws if `AddAdMob()` was not called on that provider. It doesn't have to run before your first page shows: if the host navigates to a page with a `BannerAd` first (Uno Extensions does this when you await the navigation inside your startup code), the banner waits and loads its ad as soon as `Initialize` runs. Other ad formats need `Initialize` before you use them.
 
 No hosting? `new ServiceCollection().AddAdMob().BuildServiceProvider()` works as well.
 
@@ -88,6 +91,10 @@ The library starts the Google Mobile Ads SDK for you once consent allows ad requ
 ### Interstitial ads
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var service = AdMobPlatform.Services!.GetRequiredService<IInterstitialAdService>();
 
 service.OnAdLoaded += (s, e) => service.ShowAd();
@@ -99,6 +106,10 @@ Or inject `IInterstitialAdService` wherever you like. Need per-ad events (`OnAdS
 ### Rewarded ads
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var service = AdMobPlatform.Services!.GetRequiredService<IRewardedAdService>();
 
 service.OnAdLoaded += (s, e) => service.ShowAd();
@@ -127,6 +138,9 @@ Two switches that are easy to mix up:
 To see the form while developing, force a geography (works on test devices and emulators):
 
 ```csharp
+using Uno.AdMob;
+using Uno.AdMob.Configuration;
+
 services.AddConsentDebugSettings(new ConsentDebugSettings
 {
     Geography = ConsentDebugGeography.Eea,
@@ -141,6 +155,8 @@ See [Consent](https://github.com/MartinZikmund/Uno.AdMob/blob/main/docs/Consent.
 Set `AdConfig.UseTestAdUnitIds = true` and every ad unit ID is swapped for one of Google's test IDs. On real devices, also register the device:
 
 ```csharp
+using Uno.AdMob.Configuration;
+
 AdConfig.AddTestDevice("<your-test-device-id>");
 ```
 
@@ -172,7 +188,7 @@ A working app lives in [samples/Uno.AdMob.Sample](https://github.com/MartinZikmu
 
 ## Staying in sync with upstream
 
-Uno.AdMob mirrors Plugin.AdMob file by file, so upstream improvements can be ported with a plain diff. The synced version and the file-by-file map are in [UPSTREAM.md](https://github.com/MartinZikmund/Uno.AdMob/blob/main/UPSTREAM.md#how-to-sync) ("Staying in sync").
+Uno.AdMob mirrors Plugin.AdMob file by file, so upstream improvements can be ported with a plain diff. The synced version and the file-by-file map are in [UPSTREAM.md](https://github.com/MartinZikmund/Uno.AdMob/blob/main/UPSTREAM.md#how-to-sync) ("How to sync").
 
 ## License
 

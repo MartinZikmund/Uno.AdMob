@@ -1,6 +1,10 @@
 Rewarded interstitial ads are displayed using the `IRewardedInterstitialAdService` service. The service is registered by `AddAdMob` and can be either injected or retrieved from the service provider as follows:
 
-```
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var rewardedInterstitialAdService = AdMobPlatform.Services!.GetRequiredService<IRewardedInterstitialAdService>();
 ```
 

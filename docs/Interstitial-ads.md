@@ -1,6 +1,10 @@
 Interstitial ads are displayed using the `IInterstitialAdService` service. The service is registered by `AddAdMob` and can be either injected or retrieved from the service provider as follows:
 
-```
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var interstitialAdService = AdMobPlatform.Services!.GetRequiredService<IInterstitialAdService>();
 ```
 

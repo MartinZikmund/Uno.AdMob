@@ -38,6 +38,8 @@ For testing purposes, you can set `AdConfig.UseTestAdUnitIds` to `true`. This wi
 When testing on real devices, you should register the device as a test device:
 
 ```csharp
+using Uno.AdMob.Configuration;
+
 AdConfig.AddTestDevice("<your-test-device-id>");
 ```
 
@@ -66,6 +68,9 @@ The following settings affect ad requests:
 You can set them either via `AdConfig` or directly on `AddAdMob(...)`:
 
 ```csharp
+using Uno.AdMob;
+using Uno.AdMob.Configuration;
+
 services.AddAdMob(
     tagForChildDirectedTreatment: TagForChildDirectedTreatment.None,
     tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.None,

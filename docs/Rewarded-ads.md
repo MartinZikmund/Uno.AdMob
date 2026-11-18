@@ -1,6 +1,10 @@
 Rewarded ads are displayed using the `IRewardedAdService` service. The service is registered by `AddAdMob` and can be either injected or retrieved from the service provider as follows:
 
-```
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob;
+using Uno.AdMob.Services;
+
 var rewardedAdService = AdMobPlatform.Services!.GetRequiredService<IRewardedAdService>();
 ```
 
