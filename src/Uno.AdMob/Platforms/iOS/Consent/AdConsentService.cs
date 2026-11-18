@@ -1,0 +1,116 @@
+using Foundation;
+using Google.UserMessagingPlatform;
+using Uno.AdMob.Configuration;
+using System.Diagnostics;
+
+namespace Uno.AdMob.Services;
+
+internal partial class AdConsentService
+{
+    internal Google.UserMessagingPlatform.ConsentInformation ConsentInformation => Google.UserMessagingPlatform.ConsentInformation.SharedInstance;
+
+    internal Google.UserMessagingPlatform.ConsentStatus ConsentStatus => ConsentInformation?.ConsentStatus ?? Google.UserMessagingPlatform.ConsentStatus.Unknown;
+
+    public void LoadAndShowConsentFormIfRequired()
+    {
+        if (ConsentInformation is null)
+        {
+            return;
+        }
+
+        RequestParameters requestParameters = new()
+        {
+            TagForUnderAgeOfConsent = AdConfig.TagForUnderAgeOfConsent is TagForUnderAgeOfConsent.True
+        };
+
+        var ds = ConsentDebugSettings.Current;
+        if (ds is not null)
+        {
+            if (ds.Reset)
+            {
+                Reset();
+            }
+
+            requestParameters.DebugSettings = new()
+            {
+                TestDeviceIdentifiers = [.. ds.TestDeviceHashedIds],
+                Geography = (DebugGeography)ds.Geography
+            };
+        };
+
+        Google.UserMessagingPlatform.ConsentInformation.SharedInstance.RequestConsentInfoUpdateWithParameters(requestParameters, error =>
+        {
+            if (error is not null)
+            {
+                Debug.Write($"[Uno.AdMob] Consent info update failed: {error.DebugDescription}");
+                OnConsentInfoFailedToUpdate?.Invoke(this, new ConsentError(error.DebugDescription));
+
+                if (CanRequestAds())
+                {
+                    OnConsentInfoUpdated?.Invoke(this, GetConsentInformation());
+                }
+
+                return;
+            }
+
+            Debug.Write($"[Uno.AdMob] Consent info update was successful. Status: {ConsentStatus}");
+
+            if (ConsentStatus is Google.UserMessagingPlatform.ConsentStatus.Required)
+            {
+                ConsentForm.LoadAndPresentIfRequiredFromViewController(null, OnConsentFormDismissedInternal);
+                return;
+            }
+
+            OnConsentInfoUpdated?.Invoke(this, GetConsentInformation());
+        });
+
+        if (CanRequestAds())
+        {
+            OnConsentInfoUpdated?.Invoke(this, GetConsentInformation());
+        }
+    }
+
+    public bool CanRequestAds()
+    {
+        return ConsentInformation?.CanRequestAds ?? false;
+    }
+
+    public bool IsPrivacyOptionsRequired()
+    {
+        return ConsentInformation.PrivacyOptionsRequirementStatus == UMPPrivacyOptionsRequirementStatus.Requried;
+    }
+
+    public void ShowPrivacyOptionsForm()
+    {
+        ConsentForm.PresentPrivacyOptionsFormFromViewController(null, OnConsentFormDismissedInternal);
+    }
+
+    public void Reset()
+    {
+        ConsentInformation.Reset();
+        OnConsentInfoUpdated?.Invoke(this, GetConsentInformation());
+    }
+
+    private void OnConsentFormDismissedInternal(NSError? error)
+    {
+        if (error is not null)
+        {
+            Debug.Write($"[Uno.AdMob] Consent form error: {error.DebugDescription}");
+            OnConsentFormError?.Invoke(this, new ConsentError(error.DebugDescription));
+            return;
+        }
+
+        OnConsentFormDismissed?.Invoke(this, EventArgs.Empty);
+        OnConsentInfoUpdated?.Invoke(this, GetConsentInformation());
+    }
+
+    private ConsentInformation GetConsentInformation() => new(GetConsentStatus(), ConsentInformation.CanRequestAds);
+
+    private ConsentStatus GetConsentStatus() => ConsentStatus switch
+    {
+        Google.UserMessagingPlatform.ConsentStatus.Required => Uno.AdMob.ConsentStatus.Required,
+        Google.UserMessagingPlatform.ConsentStatus.NotRequired => Uno.AdMob.ConsentStatus.NotRequired,
+        Google.UserMessagingPlatform.ConsentStatus.Obtained => Uno.AdMob.ConsentStatus.Obtained,
+        _ => Uno.AdMob.ConsentStatus.Unknown,
+    };
+}

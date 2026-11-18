@@ -148,19 +148,19 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
 | `src/Plugin.AdMob/Platforms/Windows/Banner/BannerAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Windows/Native/MediaViewHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/Windows/Native/NativeAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
-| `src/Plugin.AdMob/Platforms/iOS/AdMobInitializer.cs` | `src/Uno.AdMob/Platforms/iOS/AdMobInitializer.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/AppOpen/AppOpen.cs` | `src/Uno.AdMob/Platforms/iOS/AppOpen/AppOpen.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/Banner/BannerAdHandler.cs` | `src/Uno.AdMob/Platforms/iOS/Banner/BannerAdHandler.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/Configuration/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Platforms/iOS/Configuration/AdMobTestAdUnits.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/Consent/AdConsentService.cs` | `src/Uno.AdMob/Platforms/iOS/Consent/AdConsentService.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/Extensions.cs` | `src/Uno.AdMob/Platforms/iOS/Extensions.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/Interstitial/InterstitialAd.cs` | `src/Uno.AdMob/Platforms/iOS/Interstitial/InterstitialAd.cs` | pending | iOS platform code (Task 5). |
+| `src/Plugin.AdMob/Platforms/iOS/AdMobInitializer.cs` | `src/Uno.AdMob/Platforms/iOS/AdMobInitializer.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/iOS/AppOpen/AppOpen.cs` | `src/Uno.AdMob/Platforms/iOS/AppOpen/AppOpen.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/iOS/Banner/BannerAdHandler.cs` | `src/Uno.AdMob/Platforms/iOS/Banner/BannerAdHandler.cs` | adapted | MAUI handler base replaced by internal `ViewHandler`; DI lookup via `AdMobPlatform`; key-window lookup instead of MAUI window handler (`// Uno:` lines). |
+| `src/Plugin.AdMob/Platforms/iOS/Configuration/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Platforms/iOS/Configuration/AdMobTestAdUnits.cs` | ported | Namespace rename; native entries documented as reserved. |
+| `src/Plugin.AdMob/Platforms/iOS/Consent/AdConsentService.cs` | `src/Uno.AdMob/Platforms/iOS/Consent/AdConsentService.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/iOS/Extensions.cs` | `src/Uno.AdMob/Platforms/iOS/Extensions.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/iOS/Interstitial/InterstitialAd.cs` | `src/Uno.AdMob/Platforms/iOS/Interstitial/InterstitialAd.cs` | ported | Namespace rename only. |
 | `src/Plugin.AdMob/Platforms/iOS/Native/MediaViewHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/iOS/Native/NativeAd.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/iOS/Native/NativeAdHandler.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
 | `src/Plugin.AdMob/Platforms/iOS/Native/VideoControllerDelegate.cs` | - | skipped | Native ads / MacCatalyst / Windows are not ported in v1. |
-| `src/Plugin.AdMob/Platforms/iOS/Rewarded/RewardedAd.cs` | `src/Uno.AdMob/Platforms/iOS/Rewarded/RewardedAd.cs` | pending | iOS platform code (Task 5). |
-| `src/Plugin.AdMob/Platforms/iOS/RewardedInterstitial/RewardedInterstitialAd.cs` | `src/Uno.AdMob/Platforms/iOS/RewardedInterstitial/RewardedInterstitialAd.cs` | pending | iOS platform code (Task 5). |
+| `src/Plugin.AdMob/Platforms/iOS/Rewarded/RewardedAd.cs` | `src/Uno.AdMob/Platforms/iOS/Rewarded/RewardedAd.cs` | ported | Namespace rename only. |
+| `src/Plugin.AdMob/Platforms/iOS/RewardedInterstitial/RewardedInterstitialAd.cs` | `src/Uno.AdMob/Platforms/iOS/RewardedInterstitial/RewardedInterstitialAd.cs` | ported | Namespace rename only. |
 | `src/Plugin.AdMob/Plugin.AdMob.csproj` | `src/Uno.AdMob/Uno.AdMob.csproj` | adapted | Rewritten for Uno.Sdk with central package management; versions come from `Directory.Packages.props`. |
 | `src/Plugin.AdMob/RewardItem.cs` | `src/Uno.AdMob/RewardItem.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
 | `src/Plugin.AdMob/RewardedAd.cs` | `src/Uno.AdMob/RewardedAd.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
