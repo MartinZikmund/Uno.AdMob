@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Uno.AdMob.Services;
 
 namespace Uno.AdMob;
 
@@ -30,15 +31,26 @@ public static partial class AdMobPlatform
     internal static bool AutomaticallyAskForConsent { get; set; } = true;
 
     /// <summary>
-    /// Initializes Uno.AdMob with the app's service provider. Call it once, after building the host.
+    /// Raised at the end of <see cref="Initialize" />, so controls loaded earlier can finish setting up.
+    /// </summary>
+    internal static event EventHandler? Initialized;
+
+    /// <summary>
+    /// Initializes Uno.AdMob with the app's service provider. Call it once, after building the host, on the UI thread.
     /// </summary>
     /// <param name="services">The service provider that has <c>AddAdMob</c> registered.</param>
     public static void Initialize(IServiceProvider services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        if (services.GetService<IAdConsentService>() is null)
+        {
+            throw new InvalidOperationException("Uno.AdMob services are not registered. Call services.AddAdMob() before AdMobPlatform.Initialize.");
+        }
+
         Services = services;
         OnInitialized(services);
+        Initialized?.Invoke(null, EventArgs.Empty);
     }
 
     internal static T GetRequiredService<T>()

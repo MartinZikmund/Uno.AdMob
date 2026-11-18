@@ -130,6 +130,7 @@ public partial class BannerAd : ContentControl // Uno: ContentControl instead of
 #if ANDROID || IOS
     // Uno: hosts the native ad view via the handler, replacing MAUI's handler pipeline
     private BannerAdHandler? _handler;
+    private bool _waitingForInitialize;
 
     /// <inheritdoc />
     public BannerAd()
@@ -148,13 +149,61 @@ public partial class BannerAd : ContentControl // Uno: ContentControl instead of
             return;
         }
 
-        _handler = new BannerAdHandler();
-        _handler.Connect(this);
-        Content = _handler.PlatformView;
+        if (AdMobPlatform.Services is null)
+        {
+            // Uno: the host may navigate to the first page before the app calls AdMobPlatform.Initialize
+            if (!_waitingForInitialize)
+            {
+                _waitingForInitialize = true;
+                AdMobPlatform.Initialized += OnPlatformInitialized;
+            }
+
+            return;
+        }
+
+        CreateHandler();
+    }
+
+    private void OnPlatformInitialized(object? sender, EventArgs e)
+    {
+        StopWaitingForInitialize();
+
+        if (DispatcherQueue.HasThreadAccess)
+        {
+            CreateHandler();
+        }
+        else
+        {
+            DispatcherQueue.TryEnqueue(CreateHandler);
+        }
+    }
+
+    private void StopWaitingForInitialize()
+    {
+        if (_waitingForInitialize)
+        {
+            _waitingForInitialize = false;
+            AdMobPlatform.Initialized -= OnPlatformInitialized;
+        }
+    }
+
+    private void CreateHandler()
+    {
+        // Uno: base.IsLoaded is the element-in-tree flag, BannerAd.IsLoaded means "ad received"
+        if (_handler is not null || !base.IsLoaded)
+        {
+            return;
+        }
+
+        BannerAdHandler handler = new();
+        handler.Connect(this);
+        _handler = handler;
+        Content = handler.PlatformView;
     }
 
     private void OnBannerUnloaded(object sender, RoutedEventArgs e)
     {
+        StopWaitingForInitialize();
         Content = null;
         _handler?.Disconnect();
         _handler = null;
