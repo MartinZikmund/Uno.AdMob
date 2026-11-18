@@ -1,0 +1,140 @@
+## Initialization
+
+Register the library in your app's services, then give it the built service provider.
+
+In `App.xaml.cs`, where you configure your host (this example uses Uno.Extensions hosting):
+
+```csharp
+var builder = this.CreateBuilder(args)
+    .Configure(host => host
+        .ConfigureServices((context, services) =>
+        {
+            services.AddAdMob();
+        }));
+
+Host = builder.Build();
+AdMobPlatform.Initialize(Host.Services);
+```
+
+`AddAdMob` takes the same parameters as upstream's `UseAdMob` (default ad unit IDs, consent options, targeting options), see [Configuration](Configuration.md).
+
+`AdMobPlatform.Initialize` connects the library to your running app. Call it once, right after building the host and before you show any ads.
+
+No Uno.Extensions hosting? A plain service collection works too:
+
+```csharp
+IServiceProvider provider = new ServiceCollection()
+    .AddAdMob()
+    .BuildServiceProvider();
+
+AdMobPlatform.Initialize(provider);
+```
+
+The library starts the Google Mobile Ads SDK for you, on both platforms, as soon as consent allows ad requests: consent stored from an earlier session counts as soon as the session's consent request starts. If you disabled the consent check, it starts the SDK right before your first ad request. Ads requested while the SDK is still starting are loaded once it has started. Google asks apps not to start the SDK before consent is gathered, so you don't need to call `MobileAds.SharedInstance.Start(...)` (iOS) or `MobileAds.Initialize(...)` (Android) yourself. If you do, call it only once `IAdConsentService.CanRequestAds()` is true.
+
+To find out when the SDK has started, for example to check that your mediation adapters initialized, await `IMobileAdsService.Initialization`. It completes once the SDK has started and its adapters have initialized or timed out, with the status of each adapter:
+
+```
+var mobileAdsService = AdMobPlatform.Services!.GetRequiredService<IMobileAdsService>();
+var status = await mobileAdsService.Initialization;
+
+foreach (var adapter in status.AdapterStatuses)
+{
+    Console.WriteLine($"{adapter.Name}: {adapter.State} in {adapter.Latency.TotalMilliseconds} ms. {adapter.Description}");
+}
+```
+
+The list includes the Google Mobile Ads SDK itself (`com.google.android.libraries.ads.mobile.sdk.MobileAds` on Android, `GADMobileAds` on iOS) and the adapters the SDK looks for. An adapter that initialized is `Ready`; one that failed, timed out or isn't in your app is `NotReady`, and `Description` is the SDK's explanation (on iOS it also repeats the state). `Initialization` completes only after the library has started the SDK, which waits for consent, and never on platforms without ad support (desktop, Windows, WebAssembly), so give it a timeout if your code waits for it, for example `Initialization.WaitAsync(TimeSpan.FromSeconds(60))`. The first start on a newly created iOS simulator can take close to a minute.
+
+## Platform support
+
+- **Android / iOS**: fully supported.
+- **Windows / desktop / WebAssembly**: the package compiles and runs, so shared code needs no `#if`, but no ads are displayed. `AdMobPlatform.IsSupported` is `false`, `BannerAd` stays empty, and loading any other format raises `OnAdFailedToLoad` ("Ads are only supported on Android and iOS.").
+- **Native ads** and **WebAssembly / AdSense** are not supported yet, see [native ads support](https://github.com/MartinZikmund/Uno.AdMob/issues) and [WebAssembly/AdSense (planned v2)](https://github.com/MartinZikmund/Uno.AdMob/issues).
+
+## Android setup
+
+You need to update your app's manifest (`Platforms/Android/AndroidManifest.xml` in the Uno single project) to include:
+- the `APPLICATION_ID` (make sure this is added inside the `<application>` element)
+- the `ACCESS_NETWORK_STATE` and `INTERNET` permissions (if they are not present already)
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest ...>
+  <application ...>
+    <meta-data
+    	android:name="com.google.android.gms.ads.APPLICATION_ID"
+    	android:value="ca-app-pub-3940256099942544~3347511713" />
+  </application>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
+```
+
+The Google Mobile Ads SDK declares the activity it shows full-screen ads in, so your manifest doesn't need one. If your manifest has a `com.google.android.gms.ads.AdActivity` entry from an earlier setup, remove it: the Next-Gen SDK doesn't have that class.
+
+The package targets Android API 24 or higher. Set the minimum supported Android version to **24** in your app's `.csproj` — the Google Mobile Ads Next-Gen SDK depends on `androidx.webkit`, which requires API 24, and lower values cause manifest merger errors (see [Troubleshooting-Android](Troubleshooting-Android.md#androidmanifest-namespace-warnings-on-net-10--api-35)):
+
+```
+<PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+	<SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
+</PropertyGroup>
+```
+
+For more details you can check the official docs: [Get started with the GMA Next-Gen SDK on Android](https://developers.google.com/admob/android/next-gen/quick-start)
+
+For a fully working example, check out the [sample app](https://github.com/MartinZikmund/Uno.AdMob/tree/main/samples/Uno.AdMob.Sample).
+
+## iOS setup
+
+1. Modify your `Platforms/iOS/Info.plist` (in the Uno single project) by adding your `GADApplicationIdentifier` and `SKAdNetworkItems` as described here: [Get started with AdMob on iOS](https://developers.google.com/admob/ios/quick-start)
+
+2. Add `GADIsAdManagerApp` to your `Platforms/iOS/Info.plist`. If your app requests App Tracking Transparency (ATT) permission, including through an AdMob IDFA message, also add `NSUserTrackingUsageDescription` with a clear description of why your app requests tracking:
+
+```
+<key>GADIsAdManagerApp</key>
+<true/>
+<key>NSUserTrackingUsageDescription</key>
+<string>This identifier will be used to deliver personalized ads to you.</string>
+```
+
+See [Consent](Consent.md#ios-ump-idfa-and-att) for the recommended UMP and ATT message flow. When using an AdMob IDFA message, let UMP present the explainer and native ATT prompt; don't request ATT separately in app code.
+
+> [!NOTE]
+> Google also recommends adding [App Transport Security exceptions](https://developers.google.com/admob/ios/app-transport-security) to your `Info.plist`, as production ad creatives may serve media over non-HTTPS connections.
+
+3. Enable Swift library linking by adding the following to your app's `.csproj`. Only add it if the iOS linker complains about missing Swift symbols (the Google SDKs ship Swift code).
+
+```
+<Target Name="LinkWithSwift" DependsOnTargets="_ParseBundlerArguments;_DetectSdkLocations" BeforeTargets="_LinkNativeExecutable">
+    <PropertyGroup>
+        <_SwiftPlatform Condition="$(RuntimeIdentifier.StartsWith('iossimulator-'))">iphonesimulator</_SwiftPlatform>
+        <_SwiftPlatform Condition="$(RuntimeIdentifier.StartsWith('ios-'))">iphoneos</_SwiftPlatform>
+    </PropertyGroup>
+    <ItemGroup>
+        <_CustomLinkFlags Include="-L" />
+        <_CustomLinkFlags Include="/usr/lib/swift" />
+        <_CustomLinkFlags Include="-L" />
+        <_CustomLinkFlags Include="$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(_SwiftPlatform)" />
+        <_CustomLinkFlags Include="-Wl,-rpath" />
+        <_CustomLinkFlags Include="-Wl,/usr/lib/swift" />
+    </ItemGroup>
+</Target>
+```
+
+4. Set the minimum supported iOS version to **15.0** — the Google Mobile Ads SDK requires it. Without it, starting the SDK can fail with a `NullReferenceException` on physical devices (see upstream issue [#56](https://github.com/marius-bughiu/Plugin.AdMob/issues/56)), and the `Jc.UMP.iOS` build targets fail unless `SupportedOSPlatformVersion` is set explicitly. In your app's `.csproj`:
+
+```
+<PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
+	<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+</PropertyGroup>
+```
+
+Also add the matching key to your `Platforms/iOS/Info.plist` — Release builds fail without it:
+
+```
+<key>MinimumOSVersion</key>
+<string>15.0</string>
+```
+
+For a fully working example, check out the [sample app](https://github.com/MartinZikmund/Uno.AdMob/tree/main/samples/Uno.AdMob.Sample).

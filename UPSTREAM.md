@@ -202,4 +202,28 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
 | `tests/Plugin.AdMob.PackageConsumer/Plugin.AdMob.PackageConsumer.csproj` | - | skipped | Upstream tests are MAUI device tests. |
 | `tests/README.md` | - | skipped | Upstream tests are MAUI device tests. |
 | `tests/ci/run-android-harness.sh` | - | skipped | Upstream tests are MAUI device tests. |
+| `docs/App-open-ads.md` | `docs/App-open-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Banner-ads.md` | `docs/Banner-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Configuration.md` | `docs/Configuration.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Consent.md` | `docs/Consent.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Home.md` | `docs/Home.md` | adapted | Native ads entry removed; Samples entry dropped. |
+| `docs/Interstitial-ads.md` | `docs/Interstitial-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Rewarded-ads.md` | `docs/Rewarded-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Rewarded-interstitial-ads.md` | `docs/Rewarded-interstitial-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Setup.md` | `docs/Setup.md` | adapted | UseAdMob -> AddAdMob + AdMobPlatform.Initialize; net11 -> net10; MAUI/MacCatalyst text replaced by Uno platform notes. |
+| `docs/Troubleshooting.md` | `docs/Troubleshooting.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-Ads-not-showing.md` | `docs/Troubleshooting-Ads-not-showing.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-Android.md` | `docs/Troubleshooting-Android.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-Banner-ads.md` | `docs/Troubleshooting-Banner-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-Consent.md` | `docs/Troubleshooting-Consent.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-Interstitial-ads.md` | `docs/Troubleshooting-Interstitial-ads.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Troubleshooting-iOS.md` | `docs/Troubleshooting-iOS.md` | adapted | MAUI wording and snippets converted to Uno (AddAdMob, using: xmlns, AdMobPlatform.Services). |
+| `docs/Upgrading.md` | `docs/Upgrading.md` | adapted | Replaced by a short page: migration table from Plugin.AdMob. Upstream release notes are MAUI-specific; port only API-behavior notes. |
+| `docs/Native-ads.md` | - | skipped | Native ads are not supported in v1. |
+| `docs/Troubleshooting-Native-ads.md` | - | skipped | Native ads are not supported in v1. |
+| `docs/Troubleshooting-Blazor-Hybrid.md` | - | skipped | Blazor Hybrid is MAUI-only. |
+| `docs/Troubleshooting-Upgrades-and-target-frameworks.md` | - | skipped | About MAUI target frameworks; Upgrading.md covers what applies. |
+| `docs/Samples.md` | - | skipped | Upstream screenshots; Uno has its own sample. |
+| `docs/_Sidebar.md` | - | skipped | Wiki sidebar; Uno docs are browsed on GitHub, Home.md has the index. |
+| `README.md` | `README.md` | adapted | Rewritten for Uno (modelled on Uno.RevenueCat), credits upstream. |
 | - | `src/Uno.AdMob/AdMobPlatform.cs` | adapted | Uno-only entry point (`Initialize`, `IsSupported`). Holds the consent/lifecycle hookup that upstream keeps in `Config.UseAdMob`. |

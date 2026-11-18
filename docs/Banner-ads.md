@@ -1,0 +1,62 @@
+## Displaying a banner ad
+
+Add the controls namespace at the top of your page:
+
+```xml
+xmlns:admob="using:Uno.AdMob"
+```
+
+and then place the banner in your page.
+
+```xml
+<admob:BannerAd AdUnitId="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx" />
+```
+
+`BannerAd` is a `ContentControl`. On Windows, desktop and WebAssembly it stays empty and never loads.
+
+> [!NOTE]
+> The `AdUnitId` is optional when using test ads. You can enable test ads by setting `AdConfig.UseTestAdUnitIds` to `true`.
+
+### Supported sizes
+
+| AdSize | Width | Height |
+|---|---|---|
+| SmartBanner | Safe area width | 50–90, picked by the SDK |
+| Banner | 320 | 50 |
+| LargeBanner | 320 | 100 |
+| MediumRectangle | 300 | 250 |
+| FullBanner | 468 | 60 |
+| Leaderboard | 728 | 90 |
+| Custom | * | * |
+
+### Adaptive banners
+
+`SmartBanner`, the default size, is an anchored adaptive banner: it spans the width of the window's safe area (the screen width on Android 10 and earlier), and the Google Mobile Ads SDK picks the height for that width and the current orientation. When that width changes, for example after the device rotates or the app window is resized, the banner loads a new ad sized for the new width. The banner is empty and `IsLoaded` is `false` while the new ad loads; then `OnAdLoaded` is raised again, or `OnAdFailedToLoad` if the new ad fails to load. A collapsed banner doesn't check its width, so if you bind `Visibility` to `IsLoaded`, a banner whose reload failed stays hidden until something else shows or reloads it.
+
+### Custom size ad
+
+You can also create banners with a custom size by specifying `AdSize="Custom"` in combination with `CustomAdWidth` and `CustomAdHeight`. For example:
+
+```xml
+<admob:BannerAd AdSize="Custom" CustomAdWidth="200" CustomAdHeight="200" /> 
+```
+
+## Properties
+| Property | Description |
+|---|---|
+| AdUnitId | The ad unit id. |
+| AdSize | The desired ad size. |
+| CustomAdWidth | The desired ad width in density-independent pixels. Used when `AdSize` is set to `AdSize.Custom`. |
+| CustomAdHeight | The desired ad height in density-independent pixels. Used when `AdSize` is set to `AdSize.Custom`. |
+| IsLoaded | Determines whether the ad is loaded or not. |
+
+## Events
+| Event | Description |
+|---|---|
+| OnAdLoaded | Raised when an ad is received. |
+| OnAdFailedToLoad | Raised when an ad request failed. If sending the request throws, for example inside the Google Mobile Ads SDK, `IAdError.Message` holds the exception's type and message. |
+| OnAdImpression | Raised when an impression is recorded for an ad. |
+| OnAdClicked | Raised when a click is recorded for an ad. |
+| OnAdSwiped | Raised when a swipe gesture on an ad is recorded as a click. Not raised for banners: the Google Mobile Ads Next-Gen SDK used on Android has no swipe event for banners, and iOS never had one. |
+| OnAdOpened | Raised when an ad opens an overlay that covers the screen. |
+| OnAdClosed | Raised when the user is about to return to the application after clicking on an ad. |

@@ -1,0 +1,152 @@
+Consent is handled automatically using Google's User Messaging Platform (UMP). IF REQUIRED, users will be prompted with the consent form on application startup, and ad requests will only be made once consent has been obtained.
+
+> [!NOTE]
+> For consent to work, you need to configure all the dialogs in AdMob’s *Privacy & messaging* section.
+
+## iOS: UMP, IDFA, and ATT
+
+Google's User Messaging Platform (UMP) and Apple's App Tracking Transparency (ATT) serve different purposes:
+
+- UMP gathers privacy choices required by regulations such as GDPR and controls whether ads can be requested.
+- ATT is the iOS system permission for tracking and access to the IDFA.
+
+If your app requests tracking permission, create and publish an **IDFA message** for the same app in AdMob's *Privacy & messaging* section. Also publish any GDPR or other regional messages your app needs. When both GDPR and IDFA messages are enabled, UMP decides which messages are required based on the user's location and choices. Right before the ATT prompt it shows one of them: the European regulations message to users who still have to make their European regulations choices (in the EEA, or everywhere if that message targets all locations), and the IDFA explainer to everyone else. See Google's [IDFA message guide](https://developers.google.com/admob/ios/privacy/idfa) and [Which message your users will see](https://support.google.com/admob/answer/10114020#which-message-your-users-will-see).
+
+With automatic consent handling enabled, use this flow:
+
+1. Configure and publish the required messages in AdMob.
+2. Add `NSUserTrackingUsageDescription` to `Platforms/iOS/Info.plist` as described in [Setup](Setup.md#ios-setup).
+3. Call `AddAdMob()` and `AdMobPlatform.Initialize(...)` and let the library start the UMP flow.
+4. While the ATT authorization status is not determined, UMP shows that message (the IDFA explainer, or the European regulations message) and then the native ATT prompt.
+
+Don't also call `ATTrackingManager.RequestTrackingAuthorization` yourself when using an AdMob IDFA message. A separate or earlier request can reverse the intended message order or make a later consent form look like a second request to track.
+
+### When the user denies tracking
+
+ATT denial does not mean that all ads must be disabled. Google states that ads can still be requested without the IDFA. The plugin continues once UMP reports that ads can be requested, while the Google Mobile Ads SDK omits the IDFA from its requests.
+
+Don't ask the user to allow tracking again in the same flow, gate app functionality on ATT approval, or treat a GDPR choice as overriding an ATT denial. Any separate regional privacy message must clearly describe its own data use and remain consistent with the ATT choice. Apple explains these requirements in [User Privacy and Data Use](https://developer.apple.com/app-store/user-privacy-and-data-use/).
+
+### Testing the complete flow
+
+ATT is a system permission and its prompt normally appears only once per installation. `IAdConsentService.Reset()` and `ConsentDebugSettings.Reset` reset UMP state for testing, but they don't reset the iOS ATT decision. Uninstall and reinstall the app to test the ATT prompt again. The prompt only appears while **Allow Apps to Request to Track** is on in *Settings > Privacy & Security > Tracking*.
+
+Before shipping, test a clean **Release** installation, not only a Debug build:
+
+- Outside the EEA, confirm the IDFA explainer appears before the native ATT prompt.
+- Test both **Allow** and **Ask App Not to Track**.
+- Confirm ads can still load after ATT denial, without showing another tracking request.
+- With EEA geography forced on a test device (see [Forcing a geography](#forcing-a-geography)), confirm that a fresh install shows the European regulations message, followed by the native ATT prompt.
+- Confirm that the messages are published for the `GADApplicationIdentifier` used by the build.
+
+While testing, use test ad unit IDs (`AdConfig.UseTestAdUnitIds`) or register your device as a test device (`AdConfig.AddTestDevice`). Consent debug settings only take effect on test devices, as described in [Forcing a geography](#forcing-a-geography). Remove test ad unit IDs, `Reset` and forced geography from production builds.
+
+## Opting out
+
+The `AddAdMob` method allows you to opt out of automatic consent handling in one of two ways:
+- `automaticallyAskForConsent: false` - by setting this parameter to `false`, we will no longer prompt the user for consent on application startup. This is the one that controls the consent form. Asking the user for consent becomes the developer's responsibility. Asking for consent can be done using `IAdConsentService.LoadAndShowConsentFormIfRequired()`. Ad requests will not be made until consent has been obtained from the user.
+- `disableConsentCheck: true` - by setting this parameter to `true`, you disable all the consent checks made before ad requests. It becomes your responsibility as a developer to make sure consent has been obtained before making ad requests, so that you are in compliance with regulations.
+
+> [!NOTE]
+> `disableConsentCheck: true` alone does **not** hide the consent form. The form still shows on startup unless you also pass `automaticallyAskForConsent: false`. It only removes the gate that holds back ad requests until `CanRequestAds()` is true.
+
+Consent check can also be managed using `AdConfig.DisableConsentCheck`.
+
+## Forcing a geography
+
+Uno.AdMob provides a service collection extension which allows you to test your app's behavior as though the device were located in various regions, such as the EEA or UK. Note that debug settings only work on test devices.
+
+```csharp
+services.AddAdMob();
+services.AddConsentDebugSettings(new ConsentDebugSettings
+{
+    Geography = ConsentDebugGeography.Eea,
+    Reset = true,
+});
+```
+
+`AddConsentDebugSettings` takes in a `ConsentDebugSettings` object, with the following properties:
+- `Geography` - you can set this to `Disabled` / `Eea` / `RegulatedUsState` / `Other`.
+- `TestDeviceHashedIds` - when testing on an actual device or an emulator, you will need to register it as a test device. Alternatively, you can use `AddTestDeviceHashedId(...)`. Without it, the forced geography is ignored on real devices (Android emulators count as test devices automatically). On Android the SDK writes the device's hashed id to logcat when the consent request runs, with a line like `Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("...")`.
+- `Reset` - when set to `true`, the consent information will be reset on each application start.
+
+## Advanced
+
+If you opt-out from automatic consent handling, you can make use of the `IAdConsentService` service to manage the user's consent. The service is registered by the library and can be either injected or retrieved from the service provider as follows:
+
+```csharp
+var adConsentService = AdMobPlatform.Services!.GetRequiredService<IAdConsentService>();
+```
+
+### Interface
+```csharp
+public interface IAdConsentService
+{
+    event EventHandler<IConsentInformation?>? OnConsentInfoUpdated;
+
+    event EventHandler<IConsentError> OnConsentInfoFailedToUpdate;
+
+    event EventHandler OnConsentFormDismissed;
+
+    event EventHandler<IConsentError> OnConsentFormError;
+
+    void LoadAndShowConsentFormIfRequired();
+
+    bool CanRequestAds();
+
+    bool IsPrivacyOptionsRequired();
+
+    void ShowPrivacyOptionsForm();
+
+    void Reset();
+}
+```
+
+### Methods
+
+#### LoadAndShowConsentFormIfRequired
+`void LoadAndShowConsentFormIfRequired()`
+
+Updates the consent information and shows the consent form if required.
+
+#### CanRequestAds
+`bool CanRequestAds()`
+
+Returns `true` when all the criteria for requesting ads is met. Doesn't take into account `AdConfig.DisableConsentCheck`.
+
+#### IsPrivacyOptionsRequired
+`bool IsPrivacyOptionsRequired()`
+
+Determines if the privacy options form is required.
+
+#### ShowPrivacyOptionsForm
+`void ShowPrivacyOptionsForm()`
+
+Presents the user with the privacy options form.
+
+#### Reset
+`void Reset()`
+
+Resets the stored consent information. Should only be used during testing.
+
+### Events
+
+#### OnConsentInfoUpdated
+`event EventHandler<IConsentInformation?>? OnConsentInfoUpdated`
+
+Raised when the consent information has been updated. This does not guarantee that consent has been obtained. `IConsentInformation` event argument will include up to date consent information.
+
+#### OnConsentInfoFailedToUpdate
+`event EventHandler<IConsentError> OnConsentInfoFailedToUpdate`
+
+Raised when we failed to update the consent information. `IConsentError` will contain error details.
+
+#### OnConsentFormDismissed
+`event EventHandler OnConsentFormDismissed`
+
+Raised after the user has dismissed the consent form.
+
+#### OnConsentFormError
+`event EventHandler<IConsentError> OnConsentFormError`
+
+Raised when we fail to show the consent form. `IConsentError` will contain error details.
