@@ -108,7 +108,7 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
 | `src/Plugin.AdMob/AdError.cs` | `src/Uno.AdMob/AdError.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
 | `src/Plugin.AdMob/AdSize.cs` | `src/Uno.AdMob/AdSize.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
 | `src/Plugin.AdMob/AppOpenAd.cs` | `src/Uno.AdMob/AppOpenAd.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
-| `src/Plugin.AdMob/BannerAd.cs` | `src/Uno.AdMob/BannerAd.cs` | pending | MAUI `ContentView` becomes WinUI `ContentControl` (Task 4). |
+| `src/Plugin.AdMob/BannerAd.cs` | `src/Uno.AdMob/BannerAd.cs` | adapted | ContentView becomes ContentControl, BindableProperty becomes DependencyProperty, handler hosting and unsupported fallback added. |
 | `src/Plugin.AdMob/Config.cs` | `src/Uno.AdMob/Config.cs` | adapted | `UseAdMob(MauiAppBuilder)` became `AddAdMob(IServiceCollection)`; MAUI handlers and the native service registration dropped; consent/lifecycle hookup moved to `AdMobPlatform`. |
 | `src/Plugin.AdMob/Configuration/AdConfig.cs` | `src/Uno.AdMob/Configuration/AdConfig.cs` | adapted | Only the `DefaultNativeAdUnitId` XML doc ("Reserved") changed. |
 | `src/Plugin.AdMob/Configuration/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Configuration/AdMobTestAdUnits.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
@@ -125,9 +125,9 @@ Uno.AdMob mirrors [marius-bughiu/Plugin.AdMob](https://github.com/marius-bughiu/
 | `src/Plugin.AdMob/Platforms/Android/AdMobInitializer.cs` | `src/Uno.AdMob/Platforms/Android/AdMobInitializer.cs` | ported | Namespace rename only. |
 | `src/Plugin.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | `src/Uno.AdMob/Platforms/Android/AdMobTestAdUnits.cs` | adapted | Native entries get "Reserved – native ads are not supported yet." XML doc. |
 | `src/Plugin.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | `src/Uno.AdMob/Platforms/Android/AppOpen/AppOpenAd.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
-| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | pending | Android platform code (Tasks 3 and 4). |
-| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | pending | Android platform code (Tasks 3 and 4). |
+| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdEventCallback.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
+| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdHandler.cs` | adapted | Runs on the minimal `Handlers/ViewHandler.cs`; mappers removed, WinUI `Rect`, `AdMobPlatform.GetRequiredService`. |
+| `src/Plugin.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | `src/Uno.AdMob/Platforms/Android/Banner/BannerAdRefreshCallback.cs` | ported | Namespace `Plugin.AdMob` to `Uno.AdMob` only. |
 | `src/Plugin.AdMob/Platforms/Android/Consent/AdConsentService.cs` | `src/Uno.AdMob/Platforms/Android/Consent/AdConsentService.cs` | adapted | ActivityStateManager replaced by ActivityResolver.Current. |
 | `src/Plugin.AdMob/Platforms/Android/Extensions.cs` | `src/Uno.AdMob/Platforms/Android/Extensions.cs` | ported | Namespace rename only. |
 | `src/Plugin.AdMob/Platforms/Android/FullScreenContentCallback.cs` | `src/Uno.AdMob/Platforms/Android/FullScreenContentCallback.cs` | ported | Namespace rename only. |

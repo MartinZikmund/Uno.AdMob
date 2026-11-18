@@ -33,4 +33,16 @@ public class AdMobPlatformTests
         Assert.AreSame(provider, AdMobPlatform.Services);
         Assert.AreSame(provider.GetRequiredService<IAdConsentService>(), AdMobPlatform.GetRequiredService<IAdConsentService>());
     }
+
+    [TestMethod]
+    public void BannerAd_Type_IsContentControl() => Assert.AreEqual(typeof(Microsoft.UI.Xaml.Controls.ContentControl), typeof(BannerAd).BaseType);
+
+    [TestMethod]
+    public void BannerAd_Has_Upstream_Events()
+    {
+        foreach (var name in new[] { "OnAdLoaded", "OnAdFailedToLoad", "OnAdImpression", "OnAdClicked", "OnAdSwiped", "OnAdOpened", "OnAdClosed" })
+        {
+            Assert.IsNotNull(typeof(BannerAd).GetEvent(name), name);
+        }
+    }
 }
