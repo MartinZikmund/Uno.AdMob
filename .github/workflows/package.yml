@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         # Nerdbank.GitVersioning needs full history to compute the version height.
         fetch-depth: 0
