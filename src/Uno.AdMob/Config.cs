@@ -87,7 +87,7 @@ public static class Config
             AdConfig.MaxAdContentRating = maxAdContentRating;
         }
 
-        // Uno: no MAUI handlers; banner and native views are not ported yet
+        // Uno: no MAUI handlers; native views are not ported yet
 
         services.AddSingleton<IInterstitialAdService, InterstitialAdService>();
         services.AddSingleton<IRewardedAdService, RewardedAdService>();

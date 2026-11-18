@@ -1,7 +1,5 @@
 # Uno.AdMob
 
-<!-- TODO: replace the placeholder icon.png (currently reused from Uno.RevenueCat) -->
-
 Google AdMob ads for [Uno Platform](https://platform.uno/) apps on Android and iOS: banner, interstitial, rewarded, rewarded interstitial and app open ads, plus GDPR consent with Google's User Messaging Platform (UMP).
 
 This library is a port of [Plugin.AdMob](https://github.com/marius-bughiu/Plugin.AdMob) by Marius Bughiu, who did the hard part. The API mirrors his on purpose, so his docs and issue tracker are useful here too. Thank you, Marius!
