@@ -27,7 +27,11 @@
     </UnoFeatures>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- -p:UseAdMobPackage=true -p:AdMobPackageVersion=<ver> consumes the packed nupkg (see docs/Troubleshooting-Android.md) -->
+  <ItemGroup Condition="'$(UseAdMobPackage)' != 'true'">
     <ProjectReference Include="..\..\..\src\Uno.AdMob\Uno.AdMob.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseAdMobPackage)' == 'true'">
+    <PackageReference Include="MZikmund.Uno.AdMob" VersionOverride="$(AdMobPackageVersion)" />
   </ItemGroup>
 </Project>
