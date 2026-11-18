@@ -23,8 +23,8 @@ public static class Config
     /// <param name="iosDefaultRewardedInterstitialAdUnitId">Optional interstitial rewarded ad unit ID to be used by default on iOS. See <see cref="AdConfig.DefaultRewardedInterstitialAdUnitId" />.</param>
     /// <param name="androidDefaultAppOpenAdUnitId">Optional app open ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultAppOpenAdUnitId" />.</param>
     /// <param name="iosDefaultAppOpenAdUnitId">Optional app open ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultAppOpenAdUnitId" />.</param>
-    /// <param name="androidDefaultNativeAdUnitId">Optional native ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultNativeAdUnitId" />.</param>
-    /// <param name="iosDefaultNativeAdUnitId">Optional native ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultNativeAdUnitId" />.</param>
+    /// <param name="androidDefaultNativeAdUnitId">Reserved – native ads are not supported yet. Optional native ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultNativeAdUnitId" />.</param>
+    /// <param name="iosDefaultNativeAdUnitId">Reserved – native ads are not supported yet. Optional native ad unit ID to be used by default on Android. See <see cref="AdConfig.DefaultNativeAdUnitId" />.</param>
     /// <param name="disableConsentCheck">Default is false. When set to true, the plugin will no longer check if there is consent before making an ad request. You should use <see cref="IAdConsentService" /> to ask for consent and ensure you can request ads before making any ad request. If consent is missing, the Google Ads SDK will automatically drop the ad requests and no ads will be served.</param>
     /// <param name="automaticallyAskForConsent">Default is true. When set to false, the plugin will no longer ask for consent automatically. Use <see cref="IAdConsentService" /> to manage consent.</param>
     /// <param name="tagForChildDirectedTreatment">Indicate whether you want Google to treat your content as child-directed when you make an ad request. See <see cref="TagForChildDirectedTreatment" />.</param>
