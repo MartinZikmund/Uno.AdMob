@@ -30,8 +30,17 @@ public partial class App : Application
 #endif
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddAdMob(disableConsentCheck: true);
+                    services.AddAdMob();
                     AdConfig.UseTestAdUnitIds = true;
+#if DEBUG
+                    // Pretend to be in the EEA so the consent form shows up.
+                    // On a real device or emulator, also add its hashed id (see logcat) to TestDeviceHashedIds.
+                    services.AddConsentDebugSettings(new ConsentDebugSettings
+                    {
+                        Geography = ConsentDebugGeography.Eea,
+                        Reset = true,
+                    });
+#endif
                 })
             );
         MainWindow = builder.Window;

@@ -3,18 +3,66 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:admob="using:Uno.AdMob"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-  <Grid RowDefinitions="*,Auto">
-    <StackPanel Padding="16"
-                Spacing="8"
-                VerticalAlignment="Center">
-      <TextBlock x:Name="SupportedText"
-                 AutomationProperties.AutomationId="SupportedText" />
-      <TextBlock x:Name="EventText"
-                 AutomationProperties.AutomationId="EventText"
-                 Text="Last banner event: (none)" />
-    </StackPanel>
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
+        Padding="12,40,12,12"
+        RowSpacing="8">
+    <TextBlock x:Name="SupportedText"
+               AutomationProperties.AutomationId="SupportedText" />
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="*,*"
+          RowDefinitions="Auto,Auto"
+          ColumnSpacing="8"
+          RowSpacing="8">
+      <Button x:Name="InterstitialButton"
+              AutomationProperties.AutomationId="InterstitialButton"
+              HorizontalAlignment="Stretch"
+              Content="Load+show interstitial"
+              Click="OnInterstitialClick" />
+      <Button x:Name="RewardedButton"
+              Grid.Column="1"
+              AutomationProperties.AutomationId="RewardedButton"
+              HorizontalAlignment="Stretch"
+              Content="Load+show rewarded"
+              Click="OnRewardedClick" />
+      <Button x:Name="RewardedInterstitialButton"
+              Grid.Row="1"
+              AutomationProperties.AutomationId="RewardedInterstitialButton"
+              HorizontalAlignment="Stretch"
+              Content="Load+show rewarded interstitial"
+              Click="OnRewardedInterstitialClick" />
+      <Button x:Name="AppOpenButton"
+              Grid.Row="1"
+              Grid.Column="1"
+              AutomationProperties.AutomationId="AppOpenButton"
+              HorizontalAlignment="Stretch"
+              Content="Load+show app open"
+              Click="OnAppOpenClick" />
+    </Grid>
+
+    <Grid Grid.Row="2"
+          ColumnDefinitions="*,*"
+          ColumnSpacing="8">
+      <Button x:Name="PrivacyOptionsButton"
+              AutomationProperties.AutomationId="PrivacyOptionsButton"
+              HorizontalAlignment="Stretch"
+              Content="Show privacy options"
+              IsEnabled="False"
+              Click="OnPrivacyOptionsClick" />
+      <Button x:Name="ResetConsentButton"
+              Grid.Column="1"
+              AutomationProperties.AutomationId="ResetConsentButton"
+              HorizontalAlignment="Stretch"
+              Content="Reset consent"
+              Click="OnResetConsentClick" />
+    </Grid>
+
+    <ListView x:Name="LogList"
+              Grid.Row="3"
+              AutomationProperties.AutomationId="LogList" />
+
     <admob:BannerAd x:Name="Banner"
-                    Grid.Row="1"
+                    Grid.Row="4"
                     HorizontalAlignment="Stretch" />
   </Grid>
 </Page>
