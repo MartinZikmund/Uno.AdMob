@@ -9,6 +9,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);CS1591;CS0067</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -28,6 +29,10 @@
 		<DebugType>embedded</DebugType>
 		<!-- Version comes from Nerdbank.GitVersioning (src/version.json). Do not hardcode it here. -->
 	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Uno.AdMob.Tests" />
+	</ItemGroup>
 
 	<!-- Shared dependencies -->
 	<ItemGroup>

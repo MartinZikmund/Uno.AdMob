@@ -1,0 +1,112 @@
+using Uno.AdMob.Services;
+
+namespace Uno.AdMob;
+
+/// <summary>
+/// Manages a rewarded ad instance.
+/// </summary>
+public interface IRewardedAd
+{
+    /// <summary>
+    /// The ad unit ID.
+    /// </summary>
+    string AdUnitId { get; }
+
+    /// <summary>
+    /// Determines whether the ad is loaded or not.
+    /// </summary>
+    bool IsLoaded { get; }
+
+    /// <summary>
+    /// Raised when an ad is loaded
+    /// </summary>
+    event EventHandler OnAdLoaded;
+
+    /// <summary>
+    /// Raised when an ad request failed
+    /// </summary>
+    event EventHandler<IAdError> OnAdFailedToLoad;
+    
+    /// <summary>
+    /// Raised when the ad showed the full screen content
+    /// </summary>
+    event EventHandler OnAdShowed;
+    
+    /// <summary>
+    /// Raised when the ad failed to show full screen content
+    /// </summary>
+    event EventHandler<IAdError> OnAdFailedToShow;
+    
+    /// <summary>
+    /// Raised when an impression is recorded for an ad.
+    /// </summary>
+    event EventHandler OnAdImpression;
+
+    /// <summary>
+    /// Raised when a click is recorded for an ad.
+    /// </summary>
+    event EventHandler OnAdClicked;
+
+    /// <summary>
+    /// Raised when the ad dismissed full screen content.
+    /// </summary>
+    event EventHandler OnAdDismissed;
+    
+    /// <summary>
+    /// Raised when the user earned a reward.
+    /// </summary>
+    event EventHandler<RewardItem> OnUserEarnedReward;
+
+    /// <summary>
+    /// Loads a rewarded ad using the specified <see cref="AdUnitId" />.
+    /// </summary>
+    void Load() => throw new NotImplementedException();
+
+    /// <summary>
+    /// Shows the already loaded rewarded ad. Does nothing if <see cref="IsLoaded" /> is false.
+    /// </summary>
+    void Show() => throw new NotImplementedException();
+}
+
+internal partial class RewardedAd(string adUnitId, ConsentGate consentGate) : IRewardedAd
+{
+    private readonly ConsentGate _consentGate = consentGate;
+
+    private static readonly TimeSpan Expiry = TimeSpan.FromHours(1);
+
+    private DateTime? _loadedAt;
+
+    public string AdUnitId { get; } = adUnitId;
+
+    public bool IsLoaded
+    {
+        get => _loadedAt is { } loadedAt && DateTime.UtcNow - loadedAt < Expiry;
+        private set => _loadedAt = value ? DateTime.UtcNow : null;
+    }
+    
+    public event EventHandler? OnAdLoaded;
+    public event EventHandler<IAdError>? OnAdFailedToLoad;
+    public event EventHandler? OnAdShowed;
+    public event EventHandler<IAdError>? OnAdFailedToShow;
+    public event EventHandler? OnAdImpression;
+    public event EventHandler? OnAdClicked;
+    public event EventHandler? OnAdDismissed;
+    public event EventHandler<RewardItem>? OnUserEarnedReward;
+
+    private bool TryBeginShow()
+    {
+        if (IsLoaded)
+        {
+            IsLoaded = false;
+            return true;
+        }
+
+        if (_loadedAt is not null)
+        {
+            _loadedAt = null;
+            OnAdFailedToShow?.Invoke(this, new AdError(AdError.AdExpiredMessage));
+        }
+
+        return false;
+    }
+}

@@ -3,6 +3,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
+		<NoWarn>$(NoWarn);UNOB0025</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
