@@ -250,7 +250,9 @@ internal partial class BannerAdHandler : ViewHandler<BannerAd, AdView>
         }
     }
 
-    private int GetAdaptiveWidth()
+    private int GetAdaptiveWidth() => (int)AdaptiveBannerWidth.Resolve(VirtualView.AvailableWidth, GetWindowWidth()); // Uno
+
+    private int GetWindowWidth()
     {
         var displayMetrics = Context.Resources!.DisplayMetrics!;
 

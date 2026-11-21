@@ -31,7 +31,7 @@ and then place the banner in your page.
 
 ### Adaptive banners
 
-`SmartBanner`, the default size, is an anchored adaptive banner: it spans the width of the window's safe area (the screen width on Android 10 and earlier), and the Google Mobile Ads SDK picks the height for that width and the current orientation. When that width changes, for example after the device rotates or the app window is resized, the banner loads a new ad sized for the new width. The banner is empty and `IsLoaded` is `false` while the new ad loads; then `OnAdLoaded` is raised again, or `OnAdFailedToLoad` if the new ad fails to load. A collapsed banner doesn't check its width, so if you bind `Visibility` to `IsLoaded`, a banner whose reload failed stays hidden until something else shows or reloads it.
+`SmartBanner`, the default size, is an anchored adaptive banner: it spans the width its parent gives it, at most the width of the window's safe area (the screen width on Android 10 and earlier), and the Google Mobile Ads SDK picks the height for that width and the current orientation. When that width changes, for example after the device rotates or the app window is resized, the banner loads a new ad sized for the new width. The banner is empty and `IsLoaded` is `false` while the new ad loads; then `OnAdLoaded` is raised again, or `OnAdFailedToLoad` if the new ad fails to load. A collapsed banner doesn't check its width, so if you bind `Visibility` to `IsLoaded`, a banner whose reload failed stays hidden until something else shows or reloads it.
 
 ### Custom size ad
 

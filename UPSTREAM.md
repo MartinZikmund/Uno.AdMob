@@ -24,6 +24,7 @@ These have no upstream counterpart, so a sync never touches them:
 
 - `AdMobPlatform.cs`: the `Initialize` entry point (replaces MAUI's `IPlatformApplication.Current.Services`).
 - `AdMobPlatform.ConsentStartup.cs`: the automatic consent flow on startup. It replaces upstream's lifecycle hooks in `Config.cs`, so when upstream changes the consent logic there, re-apply the change here.
+- `AdaptiveBannerWidth.cs`: picks the adaptive banner width from the banner's layout slot, capped at the window width. Upstream always uses the window width.
 - `Handlers/ViewHandler.cs`: tiny stand-in for MAUI's `ViewHandler` base class that the ported banner handlers derive from.
 - `Platforms/Android/ActivityResolver.cs`: tracks the current activity (replaces `Platform.CurrentActivity`).
 - `Platforms/Android/AdMobPlatform.Android.cs`: Android part of `Initialize` (lifecycle hooks, consent startup).
