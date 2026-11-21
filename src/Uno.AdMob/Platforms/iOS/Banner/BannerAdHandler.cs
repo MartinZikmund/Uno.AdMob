@@ -173,7 +173,9 @@ internal partial class BannerAdHandler : ViewHandler<BannerAd, BannerView>
         }
     }
 
-    private nfloat GetAdaptiveWidth(BannerView adView)
+    private nfloat GetAdaptiveWidth(BannerView adView) => (nfloat)AdaptiveBannerWidth.Resolve(VirtualView.AvailableWidth, GetWindowWidth(adView)); // Uno
+
+    private nfloat GetWindowWidth(BannerView adView)
     {
         // Uno: no MAUI window handler, use the key window of the connected scenes
         var window = adView.Window ?? UIApplication.SharedApplication.ConnectedScenes
