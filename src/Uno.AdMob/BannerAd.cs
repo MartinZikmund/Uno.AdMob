@@ -127,6 +127,10 @@ public partial class BannerAd : ContentControl // Uno: ContentControl instead of
 
     internal double HeightRequest { set => Height = value; }
 
+    // Uno: the slot the parent arranged the banner in, unaffected by the Width the handler sets
+    internal double AvailableWidth =>
+        global::Microsoft.UI.Xaml.Controls.Primitives.LayoutInformation.GetLayoutSlot(this).Width - Margin.Left - Margin.Right;
+
 #if ANDROID || IOS
     // Uno: hosts the native ad view via the handler, replacing MAUI's handler pipeline
     private BannerAdHandler? _handler;
